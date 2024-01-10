@@ -1,8 +1,10 @@
-<?php 
+<?php
 
 class Category
 {
     private ?int $id;
+
+    private ?PDO $pdo;
     private ?string $name;
     private ?string $description;
     private ?DateTime $createdAt;
@@ -16,7 +18,6 @@ class Category
         $this->description = $description;
         $this->createdAt = new DateTime();
         $this->updatedAt = $updatedAt;
-
     }
 
     /**
@@ -40,6 +41,12 @@ class Category
     {
         $this->id = $id;
 
+        return $this;
+    }
+
+    public function setPDO(PDO $pdo)
+    {
+        $this->pdo = $pdo;
         return $this;
     }
 
@@ -137,5 +144,23 @@ class Category
         $this->updatedAt = $updatedAt;
 
         return $this;
+    }
+
+    public function getProducts()
+    {
+        $query = "SELECT * FROM category INNER JOIN product ON category.id = product.category_id WHERE category.id = :id ";
+        $stmt = $this->pdo->prepare($query);
+        $stmt->bindParam(':id', $this->id);
+        $stmt->execute();
+        $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        // var_dump($result);
+        $products = [];
+        $i=0;
+        foreach ($result as $product) {
+
+            $products[$i] =  new Product($product['id'], $product['name'], json_decode($product['picture']), $product['price'], $product['description'], $product['quantity'], new DateTime($product['createdAt']), new DateTime($product['updatedAt']), $product['category_id']);
+            $i++;
+        }
+        return $products;
     }
 }

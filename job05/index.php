@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 require_once 'Product.php';
 require_once 'Category.php';
@@ -14,7 +14,7 @@ try {
     $stmt->execute();
 
     $result = $stmt->fetch(PDO::FETCH_ASSOC);
-    $result ['picture'] = json_decode($result['picture']); 
+    // $result ['picture'] = json_decode($result['picture']); 
     // var_dump($result);
 
     // header('Content-Type: application/json');
@@ -26,8 +26,17 @@ try {
 
 // var_dump($result);
 
-$newProduct = new Product($result['id' ],$result['name'], $result['picture'], $result['price'], $result['description'], $result['quantity'], new Datetime($result['createdAt']),new DateTime($result['updatedAt']), $result['category_id']);
-$newProduct->setPDO($dbh);
-var_dump($newProduct);
-$newCategory = $newProduct->getCategory();
-var_dump($newCategory);
+// $newProduct = new Product($result['id' ],$result['name'], $result['picture'], $result['price'], $result['description'], $result['quantity'], new Datetime($result['createdAt']),new DateTime($result['updatedAt']), $result['category_id']);
+// $newProduct->setPDO($dbh);
+// var_dump($newProduct);
+// $newCategory = $newProduct->getCategory();
+// var_dump($newCategory);
+
+$categoryId = new Category();
+$categoryId->setPDO($dbh);
+$categoryId->setId(2);
+$array = $categoryId->getProducts();
+var_dump($array);
+// foreach ($array as $products) {
+//     var_dump($products);
+// }
